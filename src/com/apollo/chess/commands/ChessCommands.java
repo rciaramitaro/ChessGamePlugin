@@ -21,9 +21,10 @@ public class ChessCommands implements CommandExecutor {
             player.sendMessage("Starting Chess");
             Chess.init(player);
         }
-        else if (command.getName().equalsIgnoreCase("movePiece")) {
-            Chess.onMovePiece(player, args[0], args[1]);
-        }
+        else if (command.getName().equalsIgnoreCase("movePiece"))
+            Chess.onMovePiece(player, args[0]);
+        else if (command.getName().equalsIgnoreCase("selectSquare"))
+            Chess.onSelectSquare(player, args[0]);
         return true;
     }
 }

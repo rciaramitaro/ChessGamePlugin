@@ -2,15 +2,9 @@ package com.apollo.chess.chessPieces;
 
 import com.apollo.chess.ChessPiece;
 import com.apollo.chess.ChessSquare;
-import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 
 public class Pawn extends ChessPiece {
-
-    private boolean isFirstMove = true;
-
-
     public Pawn(World world, int x, int y, int z, int num, String color) {
         super(world, x, y, z, "Pawn"+num, color);
     }
@@ -28,61 +22,60 @@ public class Pawn extends ChessPiece {
         //move forward open spaces on same column
         if (currentColumn == destinationColumn) {
             //rules for white pawns
-            if (getColor() == "white" && !isDestinationObstructed(squareMatrix, destination)) {
+            if (getColor().equals("white") && !isDestinationObstructed(squareMatrix, destination)) {
                 //white to move forward by 1
+                //anything else is invalid
                 if (destinationRow - currentRow == -1) {
-                    isFirstMove = false;
                     return true;
                 }
                 //white to move forward by 2
-                else if (destinationRow - currentRow == -2 && isFirstMove) {
-                    isFirstMove = false;
-                    return true;
-                }
-                //anything else is invalid
-                else {
-                    return false;
-                }
+                else return destinationRow - currentRow == -2 && isFirstMove;
             }
-            else if (getColor() == "black") {
+            else if (getColor().equals("black") && !isDestinationObstructed(squareMatrix, destination)) {
                 //black to move forward by 1
+                //anything else is invalid
                 if (destinationRow - currentRow == 1 && !isDestinationObstructed(squareMatrix, destination)) {
-                    isFirstMove = false;
                     return true;
                 }
                 //black to move forward by 2
-                else if (destinationRow - currentRow == 2 && isFirstMove) {
-                    isFirstMove = false;
-                    return true;
-                }
-                //anything else is invalid
-                else {
-                    return false;
-                }
+                else return destinationRow - currentRow == 2 && isFirstMove;
             }
         }
         //pawn is attacking diagonally forward
         else if (destination.getChessPiece() != null && Math.abs(destinationColumn - currentColumn) == 1) {
             //white pawn attacking
-            if (getColor() == "white" && destination.getChessPiece().getColor() == "black" && destinationRow - currentRow == -1) {
-                isFirstMove = false;
+            if (getColor().equals("white") && destination.getChessPiece().getColor().equals("black") && destinationRow - currentRow == -1) {
                 return true;
             }
             //black pawn attacking
-            else if (getColor() == "black" && destination.getChessPiece().getColor() == "white"  && destinationRow - currentRow == 1) {
-                isFirstMove = false;
-                return true;
-            }
-            //anything else is invalid
-            else
-                return false;
+            else return getColor().equals("black") && destination.getChessPiece().getColor().equals("white") && destinationRow - currentRow == 1;
         }
         //anything else is invalid
         return false;
     }
 
+    public void setControlSquares(ChessSquare[][] squareMatrix) {
+        int attackingRow = 0;
+        int currentColumn = this.getCurrentLocation().getColumn();
+
+        if (this.getColor().equalsIgnoreCase("white")) {
+            attackingRow = this.getCurrentLocation().getRow() - 1;
+        } else if (this.getColor().equalsIgnoreCase("black"))
+            attackingRow = this.getCurrentLocation().getRow() + 1;
+
+        if (currentColumn < 1) {
+            squareMatrix[attackingRow][currentColumn + 1].setIsControlledBy(this.getColor());
+        } else if (currentColumn > 6) {
+            squareMatrix[attackingRow][currentColumn - 1].setIsControlledBy(this.getColor());
+        }
+        else {
+            squareMatrix[attackingRow][currentColumn + 1].setIsControlledBy(this.getColor());
+            squareMatrix[attackingRow][currentColumn - 1].setIsControlledBy(this.getColor());
+        }
+    }
+
     private boolean isDestinationObstructed(ChessSquare[][] squareMatrix, ChessSquare destination) {
-        if (this.getColor() == "white") {
+        if (this.getColor().equals("white")) {
             for (int row = this.getCurrentLocation().getRow()-1; row>= destination.getRow(); row-- ) {
                 if (squareMatrix[row][destination.getColumn()].getChessPiece() != null) {
                     return true;
@@ -90,7 +83,7 @@ public class Pawn extends ChessPiece {
             }
             return false;
         }
-        else if (this.getColor() == "black") {
+        else if (this.getColor().equals("black")) {
             for (int row = this.getCurrentLocation().getRow()+1; row<= destination.getRow(); row++ ) {
                 if (squareMatrix[row][destination.getColumn()].getChessPiece() != null) {
                     return true;

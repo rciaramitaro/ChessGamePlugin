@@ -5,12 +5,15 @@ import org.bukkit.World;
 
 public class ChessPiece {
 
+    public ChessSquare[][] squareMatrix;
     public boolean isFirstMove = true;
-
-    private static boolean isPinned;
-    private String name;
-    private String color;
-    private Location referenceLocation;
+    public boolean isPinned;
+    public boolean isControllingSquare = false;
+    public boolean isKing = false;
+    public boolean isAttacking;
+    private final String name;
+    private final String color;
+    private final Location referenceLocation;
     private ChessSquare currentLocation;
 
     public ChessPiece(World world, int x, int y, int z, String name, String color) {
@@ -43,7 +46,32 @@ public class ChessPiece {
         return false;
     }
 
-    public boolean isSameColor (ChessPiece piece) {
-        return this.getColor() == piece.getColor();
+    public boolean isSameColor (String color) {
+        return this.getColor().equals(color);
+    }
+
+    public void updateControlledSquares(ChessSquare[][] squareMatrix, boolean isHighlight) {
+        setControlSquares(squareMatrix);
+        for (int row=0; row < 8; row++) {
+            for (int column=0; column < 8; column++) {
+                if (isDestinationOk(squareMatrix, squareMatrix[row][column])) {
+                    if (isHighlight)
+                        squareMatrix[row][column].setSquareColor("yellow");
+                }
+                else {
+                    squareMatrix[row][column].setSquareColor(squareMatrix[row][column].getColor());
+                }
+            }
+        }
+    }
+
+    public void setControlSquares(ChessSquare[][] squareMatrix) {
+    }
+
+    public void setMoved() {
+        this.isFirstMove = false;
+    }
+
+    public void setIsInCheck(boolean b) {
     }
 }

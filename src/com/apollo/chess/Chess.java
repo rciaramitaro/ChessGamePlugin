@@ -6,25 +6,57 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.sql.SQLOutput;
-
 
 public class Chess {
 
     private static final int SQUARE_SIZE = 10;
     private static final int BORDER_SIZE = 2;
 
-    private static final ChessSquare[][] squareMatrix = new ChessSquare[8][8];
+    private static ChessSquare[][] squareMatrix = new ChessSquare[8][8];
+    private static ChessSquare selectedSquare;
+    private static Player player1;
 
     public static void init(Player player) {
-
+        player1 = player;
         Location chessStartLocation = new Location(player.getWorld(), -1235, 81, -333);
 
         createChessBorder(chessStartLocation);
 
         resetChessBoard(chessStartLocation);
         setupChessBoard(chessStartLocation);
+    }
 
+    public static void onSelectSquare(Player player, String selected) {
+
+        ChessSquare tempSquare = findLocation(selected);
+        if (tempSquare != null) {
+            if (tempSquare.getChessPiece() != null) {
+                selectedSquare = tempSquare;
+                updateControlledSquares();
+                selectedSquare.getChessPiece().updateControlledSquares(squareMatrix, true);
+                printControlledSquares();
+            }
+            else {
+                player.sendMessage("This square doesn't have a piece on it");
+            }
+        }
+        else
+            player.sendMessage("Square doesn't exist");
+    }
+
+    private static void printControlledSquares() {
+        for (int row=0; row < 8; row++) {
+            System.out.println();
+            for (int column = 0; column < 8; column++) {
+                if (squareMatrix[row][column].getIsBeingControlledByBlack())
+                    System.out.print(row + "" + column + "" + " b ");
+                if (squareMatrix[row][column].getIsBeingControlledByWhite())
+                    System.out.print(row + "" + column + "" + " w ");
+                if (!squareMatrix[row][column].getIsBeingControlledByWhite() && !squareMatrix[row][column].getIsBeingControlledByBlack())
+                    System.out.print(row + "" + column + "" + " # ");
+            }
+        }
+        System.out.println();
     }
 
     private static void resetChessBoard(Location initialLocation) {
@@ -46,17 +78,50 @@ public class Chess {
         }
     }
 
-    public static void onMovePiece(Player player, String previous, String destination) {
-        ChessSquare prevLocation = findLocation(previous);
+    public static void onMovePiece(Player player, String destination) {
+        ChessSquare prevLocation = selectedSquare;
         ChessSquare destinationLocation = findLocation(destination);
 
 
         if (prevLocation != null && destinationLocation != null) {
             if (prevLocation.getChessPiece() != null) {
                 if (prevLocation.getChessPiece().isDestinationOk(squareMatrix, destinationLocation)) {
+                    int currColumn = prevLocation.getColumn();
+                    int destColumn = destinationLocation.getColumn();
+                    int distance = destColumn - currColumn;
+
+                    prevLocation.getChessPiece().setMoved();
                     player.sendMessage("Moving " + prevLocation.getChessPiece().getColor() + " " + prevLocation.getChessPiece().getName());
+
+                    //Move the rook to castle
+                    if (prevLocation.getChessPiece().isKing && Math.abs(distance) == 2) {
+                        if (prevLocation.getChessPiece().getColor().equalsIgnoreCase("white")) {
+                            if (distance < 0) { //left castle
+                                squareMatrix[7][3].setPiece(squareMatrix[7][0].getChessPiece());
+                                squareMatrix[7][0].removePiece();
+                            }
+                            else { //right castle
+                                squareMatrix[7][5].setPiece(squareMatrix[7][7].getChessPiece());
+                                squareMatrix[7][7].removePiece();
+                            }
+                        }
+                        else if (prevLocation.getChessPiece().getColor().equalsIgnoreCase("black")) {
+                            if (distance < 0) { //left castle
+                                squareMatrix[0][3].setPiece(squareMatrix[0][0].getChessPiece());
+                                squareMatrix[0][0].removePiece();
+                            }
+                            else { //right castle
+                                squareMatrix[0][5].setPiece(squareMatrix[0][7].getChessPiece());
+                                squareMatrix[0][7].removePiece();
+                            }
+                        }
+                    }
                     prevLocation.movePiece(destinationLocation);
-                } else
+                    updateControlledSquares();
+                    printControlledSquares();
+                    determineChecks();
+                }
+                else
                     player.sendMessage("Cannot move " + prevLocation.getChessPiece().getColor() + " " + prevLocation.getChessPiece().getName() + ". Invalid location");
             }
             else {
@@ -64,7 +129,43 @@ public class Chess {
             }
         }
         else
-            player.sendMessage("One of the locations doesnt exist");
+            player.sendMessage("One of the locations doesn't exist");
+    }
+
+    private static void determineChecks() {
+        for (int row=0; row < 8; row++) {
+            for (int column = 0; column < 8; column++) {
+                ChessSquare currSquare = squareMatrix[row][column];
+                if (currSquare.getChessPiece() != null) {
+                    ChessPiece currPiece = currSquare.getChessPiece();
+                    currPiece.updateControlledSquares(squareMatrix, false);
+                    if (currPiece.getName().equalsIgnoreCase("King") && currSquare.isBeingControlledByOppositeColor(currPiece.getColor())) {
+                        currPiece.setIsInCheck(true);
+                        player1.sendMessage("You are in check!");
+                    }
+                }
+            }
+        }
+    }
+
+    private static void updateControlledSquares() {
+        resetControlledSquares();
+        for (int row=0; row < 8; row++) {
+            for (int column=0; column < 8; column++) {
+                ChessSquare currSquare = squareMatrix[row][column];
+                if (currSquare.getChessPiece() != null) {
+                    currSquare.getChessPiece().updateControlledSquares(squareMatrix, false);
+                }
+            }
+        }
+    }
+
+    private static void resetControlledSquares() {
+        for (int row=0; row < 8; row++) {
+            for (int column=0; column < 8; column++) {
+                squareMatrix[row][column].setIsControlledBy("");
+            }
+        }
     }
 
     private static ChessSquare findLocation(String location) {
@@ -83,11 +184,11 @@ public class Chess {
             return;
         }
         if (row == 6) {
-            square.setPiece(new Pawn(world, -1055 , 116, -360,column+1,  "white"));
+            //square.setPiece(new Pawn(world, -1055 , 116, -360,column+1,  "white"));
             return;
         }
         if (row == 1) {
-            square.setPiece(new Pawn(world, -1055 , 116, -410,column+1,  "black"));
+            //square.setPiece(new Pawn(world, -1055 , 116, -410,column+1,  "black"));
             return;
         }
         switch (column) {
@@ -114,15 +215,15 @@ public class Chess {
                 break;
             case 3:
                 if ( row == 7)
-                    square.setPiece(new Queen(world, -1025 , 116, -350,-1,  "white"));
+                    square.setPiece(new Queen(world, -1025 , 116, -350,  "white"));
                 else
-                    square.setPiece(new Queen(world, -1025 , 116, -420,-1,  "black"));
+                    square.setPiece(new Queen(world, -1025 , 116, -420,"black"));
                 break;
             case 4:
                 if ( row == 7)
-                    square.setPiece(new King(world, -1015 , 116, -350,-1,  "white"));
+                    square.setPiece(new King(world, -1015 , 116, -350, "white"));
                 else
-                    square.setPiece(new King(world, -1015 , 116, -420,-1,  "black"));
+                    square.setPiece(new King(world, -1015 , 116, -420,"black"));
         }
     }
 
@@ -142,12 +243,21 @@ public class Chess {
 
                 square.setWorldLocation(worldLocation);
 
-                createChessSquare(worldLocation, row, column);
-
                 square.setName(getColumnName(column) + getRowName(row));
                 square.setColumn(column);
                 square.setRow(row);
-                //System.out.println(square.getName() + " column: " + square.getColumn() + " row: " + square.getRow());
+                if (column%2 == 0) {
+                    if (row%2 == 0)
+                        square.setSquareColor("white");
+                    else
+                        square.setSquareColor("black");
+                }
+                else {
+                    if (row%2 == 0)
+                        square.setSquareColor("black");
+                    else
+                        square.setSquareColor("white");
+                }
 
                 addPiece(initialLocation.getWorld(), square, row, column);
 
@@ -217,33 +327,5 @@ public class Chess {
         initialLocation.setX(xInitial);
         initialLocation.setY(yInitial);
         initialLocation.setZ(zInitial);
-    }
-
-    private static void createChessSquare(Location worldLocation, int row, int column) {
-        Location initialLocation = new Location(worldLocation.getWorld(), worldLocation.getX(), worldLocation.getY(), worldLocation.getZ());
-        int xInitial = (int) initialLocation.getX();
-        int zInitial = (int) initialLocation.getZ();
-
-        for (int z = 0; z <= SQUARE_SIZE - 1; z++) {
-            initialLocation.setZ(zInitial + z);
-            for (int x = 0; x <= SQUARE_SIZE - 1; x++) {
-                initialLocation.setX(xInitial + x);
-
-                if (column%2 == 0) {
-                    if (row%2 == 0)
-                        initialLocation.getBlock().setType(Material.WHITE_CONCRETE);
-                    else
-                        initialLocation.getBlock().setType(Material.BLACK_CONCRETE);
-                }
-                else {
-                    if (row%2 == 0)
-                        initialLocation.getBlock().setType(Material.BLACK_CONCRETE);
-                    else
-                        initialLocation.getBlock().setType(Material.WHITE_CONCRETE);
-                }
-            }
-        }
-        initialLocation.setZ(zInitial);
-        initialLocation.setX(xInitial);
     }
 }

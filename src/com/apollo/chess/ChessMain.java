@@ -10,6 +10,7 @@ public class ChessMain extends JavaPlugin {
         System.out.println("The Chess Plugin is enabled");
 
         getCommand("startChess").setExecutor(new ChessCommands());
+        getCommand("selectSquare").setExecutor(new ChessCommands());
         getCommand("movePiece").setExecutor(new ChessCommands());
     }
 }

@@ -8,3 +8,5 @@ commands:
     description: This commands starts chess
   movePiece:
     description: This commands starts chess
+  selectSquare:
+    description: Highlights available squares

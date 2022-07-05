@@ -6,27 +6,20 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="78eef361-0d20-46fe-87a2-91924cb80cee" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/Chess_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Chess.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/apollo/chess/Chess.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/apollo/chess/ChessMain.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/apollo/chess/ChessPiece.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/apollo/chess/ChessSquare.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Bishop.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/King.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Knight.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Pawn.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Queen.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Rook.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/apollo/chess/commands/ChessCommands.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/plugin.yml" afterDir="false" />
+    <list default="true" id="78eef361-0d20-46fe-87a2-91924cb80cee" name="Changes" comment="Initial Commit">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/Chess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/Chess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/ChessMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/ChessMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/ChessPiece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/ChessPiece.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/ChessSquare.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/ChessSquare.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Bishop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Bishop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/King.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/King.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Knight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Knight.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Pawn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Pawn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Queen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Queen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Rook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Rook.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/commands/ChessCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/commands/ChessCommands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,6 +73,14 @@
       <option name="presentableId" value="Default" />
       <updated>1656287196977</updated>
     </task>
+    <task id="LOCAL-00001" summary="Initial Commit">
+      <created>1656799345425</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1656799345425</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -92,5 +93,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Initial Commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial Commit" />
   </component>
 </project>
