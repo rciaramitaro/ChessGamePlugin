@@ -6,34 +6,37 @@ import org.bukkit.World;
 
 public class Queen extends ChessPiece {
 
-    private static boolean isPinned;
-    private ChessSquare currentLocation;
-
     public Queen(World world, int x, int y, int z, String color) {
         super(world, x, y, z, "Queen", color);
     }
 
-    public void setLocation(ChessSquare square) {
-        currentLocation = square;
-    }
-
-    public ChessSquare getCurrentLocation() {
-        return currentLocation;
-    }
-
-    public boolean isDestinationOk(ChessSquare[][] squareMatrix, ChessSquare destination) {
-        int rowDistance = destination.getRow() - this.getCurrentLocation().getRow();
-        int columnDistance = destination.getColumn() - this.getCurrentLocation().getColumn();
+    public void setControlledSquares(ChessSquare[][] squareMatrix) {
 
         ChessPiece rookRef = new Rook(this.getReferenceLocation().getWorld(), 0,0,0, 0, this.getColor());
         ChessPiece bishopRef = new Bishop(this.getReferenceLocation().getWorld(), 0,0,0, 0, this.getColor());
 
-        rookRef.setLocation(this.currentLocation);
-        bishopRef.setLocation(this.currentLocation);
+        rookRef.setLocation(this.getCurrentLocation());
+        bishopRef.setLocation(this.getCurrentLocation());
 
-        if (rookRef.isDestinationOk(squareMatrix, destination) || bishopRef.isDestinationOk(squareMatrix, destination))
-            return true;
-        return false;
+        rookRef.setControlledSquares(squareMatrix);
+        bishopRef.setControlledSquares(squareMatrix);
 
+        copyControlSquareMatrix(rookRef.controlSquareMatrix, bishopRef.controlSquareMatrix);
+    }
+
+    private void copyControlSquareMatrix(ChessSquare[][] rookControlSquareMatrix, ChessSquare[][] bishopControlSquareMatrix1) {
+        for (int row=0; row < 8; row++) {
+            for (int column = 0; column < 8; column++) {
+                ChessSquare rookCurrSquare = rookControlSquareMatrix[row][column];
+                ChessSquare bishopCurrSquare = bishopControlSquareMatrix1[row][column];
+
+                if (rookCurrSquare != null) {
+                    controlSquareMatrix[row][column] = rookCurrSquare;
+                }
+                if (bishopCurrSquare != null) {
+                    controlSquareMatrix[row][column] = bishopCurrSquare;
+                }
+            }
+        }
     }
 }

@@ -10,23 +10,25 @@ public class Bishop extends ChessPiece {
         super(world, x, y, z, "Bishop"+num, color);
     }
 
-    public boolean isDestinationOk(ChessSquare[][] squareMatrix, ChessSquare destination) {
-        int rowDistance = destination.getRow() - this.getCurrentLocation().getRow();
-        int columnDistance = destination.getColumn() - this.getCurrentLocation().getColumn();
 
-        //dont capture same color pieces
-        if (destination.getChessPiece() != null)
-            if (isSameColor(destination.getChessPiece().getColor()))
-                return false;
 
-        if (Math.abs(rowDistance) == Math.abs(columnDistance)) {
-            return !isDestinationObstructed(squareMatrix, rowDistance, columnDistance);
+    public void setControlledSquares(ChessSquare[][] squareMatrix) {
+
+        for (int row=0; row < 8; row++) {
+            for (int column=0; column < 8; column++) {
+                ChessSquare destination = squareMatrix[row][column];
+                int rowDistance = destination.getRow() - this.getCurrentLocation().getRow();
+                int columnDistance = destination.getColumn() - this.getCurrentLocation().getColumn();
+
+                if (Math.abs(rowDistance) == Math.abs(columnDistance)) {
+                    setSquareControl(squareMatrix, rowDistance, columnDistance);
+                }
+
+            }
         }
-        return false;
     }
 
-    private boolean isDestinationObstructed(ChessSquare[][] squareMatrix, int rowDistance, int columnDistance) {
-        isControllingSquare = false;
+    private void setSquareControl(ChessSquare[][] squareMatrix, int rowDistance, int columnDistance) {
         boolean isMovingDown = rowDistance > 0;
         boolean isMovingRight = columnDistance > 0;
         int absDistance = Math.abs(rowDistance);
@@ -35,7 +37,7 @@ public class Bishop extends ChessPiece {
 
         //same square
         if(absDistance == 0) {
-            return true;
+            return;
         }
 
         for (int currDistance = 1; currDistance <= absDistance; currDistance++) {
@@ -46,58 +48,71 @@ public class Bishop extends ChessPiece {
                     if (!isSameColor(currSquare.getChessPiece().getColor())) { //if found piece if opp. color then it can be captured
                         currSquare.setIsControlledBy(this.getColor());
                         if (currDistance < absDistance) {
-                            return true;
+                            return;
                         }
                     }
                     else {
                         currSquare.setIsControlledBy(this.getColor());
-                        return true;
+                        controlSquareMatrix[initialRow+currDistance][initialColumn+currDistance] = currSquare;
+                        return;
                     }
                 }
                 else {
                     currSquare.setIsControlledBy(this.getColor());
                 }
+                controlSquareMatrix[initialRow+currDistance][initialColumn+currDistance] = currSquare;
                 squareMatrix[initialRow+currDistance][initialColumn+currDistance] = currSquare;
+
+
             }
             //Bishop is trying to move down and left
             else if (isMovingDown && !isMovingRight) {
                 ChessSquare currSquare = squareMatrix[initialRow+currDistance][initialColumn-currDistance];
+
                 if (currSquare.getChessPiece() != null) {
                     if (!isSameColor(currSquare.getChessPiece().getColor())) { //if found piece if opp. color then it can be captured
                         currSquare.setIsControlledBy(this.getColor());
                         if (currDistance < absDistance) {
-                            return true;
+                            return;
                         }
                     }
                     else {
                         currSquare.setIsControlledBy(this.getColor());
-                        return true;
+                        controlSquareMatrix[initialRow+currDistance][initialColumn-currDistance] = currSquare;
+                        return;
                     }
                 }
                 else {
                     currSquare.setIsControlledBy(this.getColor());
                 }
+                controlSquareMatrix[initialRow+currDistance][initialColumn-currDistance] = currSquare;
                 squareMatrix[initialRow+currDistance][initialColumn-currDistance] = currSquare;
+
+
             }
             //Bishop is trying to move up and right
             else if (!isMovingDown && isMovingRight) {
                 ChessSquare currSquare = squareMatrix[initialRow - currDistance][initialColumn + currDistance];
+
                 if (currSquare.getChessPiece() != null) {
                     if (!isSameColor(currSquare.getChessPiece().getColor())) { //if found piece if opp. color then it can be captured
                         currSquare.setIsControlledBy(this.getColor());
                         if (currDistance < absDistance) {
-                            return true;
+                            return;
                         }
                     }
                     else {
                         currSquare.setIsControlledBy(this.getColor());
-                        return true;
+                        controlSquareMatrix[initialRow - currDistance][initialColumn + currDistance] = currSquare;
+                        return;
                     }
                 }
                 else {
                     currSquare.setIsControlledBy(this.getColor());
                 }
+                controlSquareMatrix[initialRow - currDistance][initialColumn + currDistance] = currSquare;
                 squareMatrix[initialRow - currDistance][initialColumn + currDistance] = currSquare;
+
             }
             //Bishop is trying to move up and left
             else {
@@ -106,20 +121,24 @@ public class Bishop extends ChessPiece {
                     if (!isSameColor(currSquare.getChessPiece().getColor())) { //if found piece if opp. color then it can be captured
                         currSquare.setIsControlledBy(this.getColor());
                         if (currDistance < absDistance) {
-                            return true;
+                            return;
                         }
                     }
                     else {
                         currSquare.setIsControlledBy(this.getColor());
-                        return true;
+                        controlSquareMatrix[initialRow-currDistance][initialColumn-currDistance] = currSquare;
+                        return;
                     }
                 }
                 else {
                     currSquare.setIsControlledBy(this.getColor());
                 }
+                controlSquareMatrix[initialRow-currDistance][initialColumn-currDistance] = currSquare;
                 squareMatrix[initialRow-currDistance][initialColumn-currDistance] = currSquare;
+
+
             }
         }
-        return false;
+        return;
     }
 }

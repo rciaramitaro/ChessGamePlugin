@@ -7,10 +7,10 @@ public class ChessMain extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        System.out.println("The Chess Plugin is enabled");
 
-        getCommand("startChess").setExecutor(new ChessCommands());
-        getCommand("selectSquare").setExecutor(new ChessCommands());
-        getCommand("movePiece").setExecutor(new ChessCommands());
+        getCommand("startChess").setExecutor(new ChessCommands(this));
+        getCommand("selectSquare").setExecutor(new ChessCommands(this));
+        getCommand("movePiece").setExecutor(new ChessCommands(this));
+        System.out.println("The Chess Plugin is enabled");
     }
 }

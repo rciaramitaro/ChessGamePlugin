@@ -17,36 +17,39 @@ public class King extends ChessPiece {
         isKing = true;
     }
 
-    public boolean isDestinationOk(ChessSquare[][] squareMatrix, ChessSquare destination) {
-        int currRow = this.getCurrentLocation().getRow();
-        int currColumn = this.getCurrentLocation().getColumn();
-        int rowDistance = destination.getRow() - currRow;
-        int columnDistance = destination.getColumn() - currColumn;
-        int absRowDistance = Math.abs(rowDistance);
-        int absColumnDistance = Math.abs(columnDistance);
+    public void setControlledSquares(ChessSquare[][] squareMatrix) {
+        for (int row=0; row < 8; row++) {
+            for (int column=0; column < 8; column++) {
+                ChessSquare destination = squareMatrix[row][column];
+                int currRow = this.getCurrentLocation().getRow();
+                int currColumn = this.getCurrentLocation().getColumn();
+                int rowDistance = destination.getRow() - currRow;
+                int columnDistance = destination.getColumn() - currColumn;
+                int absRowDistance = Math.abs(rowDistance);
+                int absColumnDistance = Math.abs(columnDistance);
 
-        if (absRowDistance <= 1 && absColumnDistance <= 1) {
-            if (absColumnDistance != 0 || absRowDistance != 0) {
-                destination.setIsControlledBy(this.getColor());
-            }
-            if (destination.isSafe(this.getColor())) {
-                if (destination.getChessPiece() != null) {
-                    if (isSameColor(destination.getChessPiece().getColor())) {
-                        return false;
+                if (absRowDistance <= 1 && absColumnDistance <= 1) {
+                    if (absColumnDistance != 0 || absRowDistance != 0) {
+                        destination.setIsControlledBy(this.getColor());
+                        controlSquareMatrix[row][column] = destination;
+                    }
+                }
+                else {
+                    if (absRowDistance == 0 && isFirstMove) {
+                        if (columnDistance == -2 && squareMatrix[currRow][currColumn - 1].isSafe(this.getColor())) {
+                            if (canCastleLeft(squareMatrix, destination)) {
+                                controlSquareMatrix[row][column] = squareMatrix[row][column];
+                            }
+                        }
+                        else if (columnDistance == 2 && squareMatrix[currRow][currColumn + 1].isSafe(this.getColor())) {
+                            if (canCastleRight(squareMatrix, destination)) {
+                                controlSquareMatrix[row][column] = squareMatrix[row][column];
+                            }
+                        }
                     }
                 }
             }
-            return true;
         }
-        else if (absRowDistance == 0 && isFirstMove && destination.isSafe(this.getColor())){
-            if (columnDistance == -2 && squareMatrix[currRow][currColumn-1].isSafe(this.getColor())) {
-                return canCastleLeft(squareMatrix, destination);
-            }
-            else if (columnDistance == 2 && squareMatrix[currRow][currColumn+1].isSafe(this.getColor())) {
-                return canCastleRight(squareMatrix, destination);
-            }
-        }
-        return false;
     }
 
     private boolean canCastleRight(ChessSquare[][] squareMatrix, ChessSquare destination) {

@@ -7,6 +7,7 @@ import org.bukkit.World;
 public class Pawn extends ChessPiece {
     public Pawn(World world, int x, int y, int z, int num, String color) {
         super(world, x, y, z, "Pawn"+num, color);
+        isPawn = true;
     }
 
     //TODO: add en-peasant and promotions
@@ -16,8 +17,6 @@ public class Pawn extends ChessPiece {
         int currentRow = this.getCurrentLocation().getRow();
         int destinationColumn = destination.getColumn();
         int destinationRow = destination.getRow();
-
-        isDestinationObstructed(squareMatrix, destination);
 
         //move forward open spaces on same column
         if (currentColumn == destinationColumn) {
@@ -48,29 +47,141 @@ public class Pawn extends ChessPiece {
                 return true;
             }
             //black pawn attacking
-            else return getColor().equals("black") && destination.getChessPiece().getColor().equals("white") && destinationRow - currentRow == 1;
+            else {
+                return getColor().equals("black") && destination.getChessPiece().getColor().equals("white") && destinationRow - currentRow == 1;
+            }
         }
         //anything else is invalid
         return false;
     }
 
-    public void setControlSquares(ChessSquare[][] squareMatrix) {
+    public int getAvailableSquares(ChessSquare[][] squareMatrix) {
+        int availableSquares = 0;
+        for (int row = 0; row < 8; row++) {
+            for (int column = 0; column < 8; column++) {
+                ChessSquare currSquare = squareMatrix[row][column];
+                ChessSquare controlSquare = controlSquareMatrix[row][column];
+
+                if (controlSquare != null) {
+                    ChessSquare prevLocation = getCurrentLocation();
+                    //make available square is if a piece is on a controlled square
+                    //if (this.getColor() == "white" && controlSquare.getIsBeingControlledByWhite() || this.getColor() == "black" && controlSquare.getIsBeingControlledByBlack()) {
+                    if (currSquare.getChessPiece() != null) {
+                        if (currSquare.getChessPiece().getColor() != this.getColor()) {
+                            ChessPiece enemyPiece = currSquare.getChessPiece();
+                            //System.out.println("Currently testing square " + currSquare.getName());
+                            getCurrentLocation().movePiece(currSquare);
+                            getCurrentLocation().getChessPiece().resetControlledSquares();
+                            resetBoardControlledSquares(squareMatrix);
+                            getCurrentLocation().getChessPiece().setControlledSquares(squareMatrix);
+                            /*updateAllControlledSquares(squareMatrix);
+                            printBoardPieces();
+                            printBoardControlledSquares();*/
+
+                            if (determineChecks(squareMatrix, getCurrentLocation().getChessPiece().getColor())) {
+                                availableSquareMatrix[row][column] = null;
+                                getCurrentLocation().setSquareColor(getCurrentLocation().getColor());
+                            } else {
+                                availableSquareMatrix[row][column] = squareMatrix[row][column];
+                                availableSquares++;
+                            }
+
+                            ChessSquare enemyLocation = getCurrentLocation();
+                            getCurrentLocation().movePiece(prevLocation);
+                            enemyLocation.setPiece(enemyPiece);
+                            getCurrentLocation().getChessPiece().resetControlledSquares();
+                            resetBoardControlledSquares(squareMatrix);
+                            getCurrentLocation().getChessPiece().setControlledSquares(squareMatrix);
+                            updateAllControlledSquares(squareMatrix);
+
+                        }
+                    }
+                    //}
+                }
+
+                if (isDestinationOk(squareMatrix, currSquare)) {
+                    //System.out.println("Currently testing square " + currSquare.getName());
+                    if (currSquare.getChessPiece() != null) {
+                        if (currSquare.getChessPiece().getColor() != this.getColor()) {
+                            ChessPiece enemyPiece = currSquare.getChessPiece();
+                            ChessSquare prevLocation = getCurrentLocation();
+                            getCurrentLocation().movePiece(currSquare);
+                            getCurrentLocation().getChessPiece().resetControlledSquares();
+                            resetBoardControlledSquares(squareMatrix);
+                            getCurrentLocation().getChessPiece().setControlledSquares(squareMatrix);
+                            updateAllControlledSquares(squareMatrix);
+                        /*printBoardPieces();
+                        printBoardControlledSquares();*/
+                            if (determineChecks(squareMatrix, getCurrentLocation().getChessPiece().getColor())) {
+                                availableSquareMatrix[row][column] = null;
+                                getCurrentLocation().setSquareColor(getCurrentLocation().getColor());
+                            } else {
+                                availableSquareMatrix[row][column] = squareMatrix[row][column];
+                                availableSquares++;
+                            }
+                            ChessSquare enemyLocation = getCurrentLocation();
+                            getCurrentLocation().movePiece(prevLocation);
+                            enemyLocation.setPiece(enemyPiece);
+                            getCurrentLocation().getChessPiece().resetControlledSquares();
+                            resetBoardControlledSquares(squareMatrix);
+                            getCurrentLocation().getChessPiece().setControlledSquares(squareMatrix);
+                            updateAllControlledSquares(squareMatrix);
+                        }
+                    }
+                    else {
+                        ChessSquare prevLocation = getCurrentLocation();
+                        getCurrentLocation().movePiece(currSquare);
+                        getCurrentLocation().getChessPiece().resetControlledSquares();
+                        resetBoardControlledSquares(squareMatrix);
+                        getCurrentLocation().getChessPiece().setControlledSquares(squareMatrix);
+                        updateAllControlledSquares(squareMatrix);
+                        /*printBoardPieces();
+                        printBoardControlledSquares();*/
+                        if (determineChecks(squareMatrix, getCurrentLocation().getChessPiece().getColor())) {
+                            availableSquareMatrix[row][column] = null;
+                            getCurrentLocation().setSquareColor(getCurrentLocation().getColor());
+                        } else {
+                            availableSquareMatrix[row][column] = squareMatrix[row][column];
+                            availableSquares++;
+                        }
+                        getCurrentLocation().movePiece(prevLocation);
+                        getCurrentLocation().getChessPiece().resetControlledSquares();
+                        resetBoardControlledSquares(squareMatrix);
+                        getCurrentLocation().getChessPiece().setControlledSquares(squareMatrix);
+                        updateAllControlledSquares(squareMatrix);
+
+                    }
+                }
+            }
+        }
+        return availableSquares;
+    }
+
+    public void setControlledSquares(ChessSquare[][] squareMatrix) {
         int attackingRow = 0;
         int currentColumn = this.getCurrentLocation().getColumn();
+        int currentRow = this.getCurrentLocation().getRow();
 
         if (this.getColor().equalsIgnoreCase("white")) {
             attackingRow = this.getCurrentLocation().getRow() - 1;
         } else if (this.getColor().equalsIgnoreCase("black"))
             attackingRow = this.getCurrentLocation().getRow() + 1;
 
-        if (currentColumn < 1) {
-            squareMatrix[attackingRow][currentColumn + 1].setIsControlledBy(this.getColor());
-        } else if (currentColumn > 6) {
-            squareMatrix[attackingRow][currentColumn - 1].setIsControlledBy(this.getColor());
-        }
-        else {
-            squareMatrix[attackingRow][currentColumn + 1].setIsControlledBy(this.getColor());
-            squareMatrix[attackingRow][currentColumn - 1].setIsControlledBy(this.getColor());
+        if (currentRow > 0 && currentRow < 7) {
+            if (currentColumn < 1) { //pawn on the a column
+                squareMatrix[attackingRow][currentColumn + 1].setIsControlledBy(this.getColor());
+                controlSquareMatrix[attackingRow][currentColumn + 1] = squareMatrix[attackingRow][currentColumn + 1];
+            } else if (currentColumn > 6) { //pawn on the h column
+                squareMatrix[attackingRow][currentColumn - 1].setIsControlledBy(this.getColor());
+                controlSquareMatrix[attackingRow][currentColumn - 1] = squareMatrix[attackingRow][currentColumn - 1];
+
+            } else {
+                squareMatrix[attackingRow][currentColumn + 1].setIsControlledBy(this.getColor());
+                squareMatrix[attackingRow][currentColumn - 1].setIsControlledBy(this.getColor());
+                controlSquareMatrix[attackingRow][currentColumn + 1] = squareMatrix[attackingRow][currentColumn + 1];
+                controlSquareMatrix[attackingRow][currentColumn - 1] = squareMatrix[attackingRow][currentColumn - 1];
+
+            }
         }
     }
 

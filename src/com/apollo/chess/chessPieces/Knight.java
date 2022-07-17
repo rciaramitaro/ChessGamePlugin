@@ -9,18 +9,19 @@ public class Knight extends ChessPiece {
         super(world, x, y, z, "Knight"+num, color);
     }
 
-    public boolean isDestinationOk(ChessSquare[][] squareMatrix, ChessSquare destination) {
-        int rowDistance = destination.getRow() - this.getCurrentLocation().getRow();
-        int columnDistance = destination.getColumn() - this.getCurrentLocation().getColumn();
+    public void setControlledSquares(ChessSquare[][] squareMatrix) {
 
-        if (destination.getChessPiece() != null)
-            if (isSameColor(destination.getChessPiece().getColor()))
-                return false;
+        for (int row=0; row < 8; row++) {
+            for (int column = 0; column < 8; column++) {
+                ChessSquare destination = squareMatrix[row][column];
+                int rowDistance = destination.getRow() - this.getCurrentLocation().getRow();
+                int columnDistance = destination.getColumn() - this.getCurrentLocation().getColumn();
 
-        if (((Math.abs(rowDistance)==1) && (Math.abs(columnDistance)==2)) || ((Math.abs(rowDistance)==2) && (Math.abs(columnDistance)==1))) {
-            destination.setIsControlledBy(this.getColor());
-            return true;
+                if (((Math.abs(rowDistance)==1) && (Math.abs(columnDistance)==2)) || ((Math.abs(rowDistance)==2) && (Math.abs(columnDistance)==1))) {
+                    destination.setIsControlledBy(this.getColor());
+                    controlSquareMatrix[row][column] = destination;
+                }
+            }
         }
-        return false;
     }
 }

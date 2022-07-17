@@ -6,6 +6,12 @@ import org.bukkit.Material;
 public class ChessSquare {
     private Location location;
     private String color;
+    private boolean isHighlighted;
+    private boolean isSelected;
+    private boolean isRecent;
+    public boolean getIsHighlighted() {
+        return isHighlighted;
+    }
     private final int SQUARE_SIZE=10;
     private boolean isBeingControlledByBlack = false;
     private boolean isBeingControlledByWhite = false;
@@ -40,7 +46,7 @@ public class ChessSquare {
         if (color.equalsIgnoreCase("black"))
             return !isBeingControlledByWhite;
 
-        return true;
+        return false;
     }
 
     public boolean isBeingControlledByOppositeColor(String currColor) {
@@ -48,7 +54,6 @@ public class ChessSquare {
             return isBeingControlledByBlack;
         }
         else if (currColor.equalsIgnoreCase("black")) {
-            System.out.println("is " + name + " controlled by white? " + isBeingControlledByWhite);
             return isBeingControlledByWhite;
         }
         return false;
@@ -150,22 +155,61 @@ public class ChessSquare {
         this.location = worldLocation;
     }
 
-    public Location getLocation() {
-        return this.location;
+    public void setRecent() {
+        this.isRecent = true;
+        setSquareColor("blue");
+    }
+
+    public void setSelected() {
+        this.isSelected = true;
+        setSquareColor("green");
+
+    }
+
+    public void setUnSelected() {
+        this.isSelected = false;
+
+        if (this.isHighlighted)
+            setSquareColor("yellow");
+        else if (this.isRecent)
+            setSquareColor("blue");
+        else
+            setSquareColor(this.getColor());
+    }
+
+    public boolean getIsSelected() {
+        return isSelected;
     }
 
     public void setSquareColor(String color) {
         Material material = null;
 
-        if (color.equals("yellow"))
-            material = Material.YELLOW_CONCRETE;
-        else if (color.equals("white")) {
-            material = Material.WHITE_CONCRETE;
-            this.color = color;
-        }
-        else if (color.equals("black")) {
-            this.color = color;
-            material = Material.BLACK_CONCRETE;
+        switch (color) {
+            case "yellow":
+                this.isHighlighted = true;
+                this.isSelected = false;
+                material = Material.YELLOW_CONCRETE;
+                break;
+            case "white":
+                this.isHighlighted = false;
+                this.isRecent = false;
+                this.isSelected = false;
+                material = Material.WHITE_CONCRETE;
+                this.color = color;
+                break;
+            case "black":
+                this.isHighlighted = false;
+                this.isRecent = false;
+                this.isSelected = false;
+                this.color = color;
+                material = Material.BLACK_CONCRETE;
+                break;
+            case "green":
+                material = Material.LIME_CONCRETE;
+                break;
+            case "blue":
+                material = Material.LIGHT_BLUE_CONCRETE;
+                break;
         }
 
         Location initialLocation = new Location(location.getWorld(), location.getX(), location.getY(), location.getZ());

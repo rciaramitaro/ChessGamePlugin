@@ -8,23 +8,25 @@ public class Rook extends ChessPiece {
     public Rook(World world, int x, int y, int z, int num, String color) {
         super(world, x, y, z, "Rook" + num, color);
     }
-    public boolean isDestinationOk(ChessSquare[][] squareMatrix, ChessSquare destination) {
 
-        int currRow = this.getCurrentLocation().getRow();
-        int currColumn = this.getCurrentLocation().getColumn();
-        int destRow = destination.getRow();
-        int destColumn = destination.getColumn();
+    public void setControlledSquares(ChessSquare[][] squareMatrix) {
 
-        if (destRow == currRow && destColumn == currColumn) //same square
-            return false;
-        else if(destRow == currRow)
-            return !isHorizontalObstructed(squareMatrix, destination, this.getCurrentLocation().getColumn(), destination.getColumn());
-        else if (destColumn == currColumn)
-            return !isVerticalObstructed(squareMatrix, destination, currRow, destRow);
-        return false;
+        for (int row=0; row < 8; row++) {
+            for (int column = 0; column < 8; column++) {
+                ChessSquare destination = squareMatrix[row][column];
+                int currRow = this.getCurrentLocation().getRow();
+                int currColumn = this.getCurrentLocation().getColumn();
+                int destRow = destination.getRow();
+                int destColumn = destination.getColumn();
 
+                if (destRow == currRow)
+                    setHorizontalControl(squareMatrix, this.getCurrentLocation().getColumn(), destination.getColumn());
+                else if (destColumn == currColumn)
+                    setVerticalControl(squareMatrix, currRow, destRow);
+            }
+        }
     }
-    private boolean isVerticalObstructed(ChessSquare[][] squareMatrix, ChessSquare destination, int initRow, int destRow) {
+    private void setVerticalControl(ChessSquare[][] squareMatrix, int initRow, int destRow) {
         int distance = destRow - initRow;
         int asbDistance = Math.abs(distance);
         boolean isMovingDown = distance > 0;
@@ -34,83 +36,92 @@ public class Rook extends ChessPiece {
         for (int currRow = 1; currRow <= asbDistance; currRow++) {
             if (isMovingDown) {
                 currSquare = squareMatrix[initRow + currRow][this.getCurrentLocation().getColumn()];
+
             }
             else {
                 currSquare = squareMatrix[initRow-currRow][this.getCurrentLocation().getColumn()];
             }
-            if (currSquare.getChessPiece() != null) {
-                if (!isSameColor(currSquare.getChessPiece().getColor())) { //if found piece is opp. color then it can be captured
-                    currSquare.setIsControlledBy(this.getColor());
-                    if (currRow < asbDistance) {
-                        return true;
-                    }
 
+            currSquare.setIsControlledBy(this.getColor());
+
+            if (currSquare.getChessPiece() != null) {
+                if (isMovingDown) {
+                    squareMatrix[initRow + currRow][this.getCurrentLocation().getColumn()] = currSquare;
+                    controlSquareMatrix[initRow + currRow][this.getCurrentLocation().getColumn()] = currSquare;
+                    //controlSquareMatrix[initRow + currRow][this.getCurrentLocation().getColumn()].setIsControlledBy("");
+                    //controlSquareMatrix[initRow + currRow][this.getCurrentLocation().getColumn()].setIsControlledBy(this.getColor());
                 }
                 else {
-                    currSquare.setIsControlledBy(this.getColor());
-                    return true;
+                    squareMatrix[initRow - currRow][this.getCurrentLocation().getColumn()] = currSquare;
+                    controlSquareMatrix[initRow - currRow][this.getCurrentLocation().getColumn()] = currSquare;
+                    //controlSquareMatrix[initRow - currRow][this.getCurrentLocation().getColumn()].setIsControlledBy("");
+                    //controlSquareMatrix[initRow - currRow][this.getCurrentLocation().getColumn()].setIsControlledBy(this.getColor());
                 }
+                return;
             }
-            else
-                currSquare.setIsControlledBy(this.getColor());
 
             if (isMovingDown) {
                 squareMatrix[initRow + currRow][this.getCurrentLocation().getColumn()] = currSquare;
+                controlSquareMatrix[initRow + currRow][this.getCurrentLocation().getColumn()] = currSquare;
+                //controlSquareMatrix[initRow + currRow][this.getCurrentLocation().getColumn()].setIsControlledBy("");
+                //controlSquareMatrix[initRow + currRow][this.getCurrentLocation().getColumn()].setIsControlledBy(this.getColor());
             }
             else {
                 squareMatrix[initRow - currRow][this.getCurrentLocation().getColumn()] = currSquare;
+                controlSquareMatrix[initRow - currRow][this.getCurrentLocation().getColumn()] = currSquare;
+                //controlSquareMatrix[initRow - currRow][this.getCurrentLocation().getColumn()].setIsControlledBy("");
+                //controlSquareMatrix[initRow - currRow][this.getCurrentLocation().getColumn()].setIsControlledBy(this.getColor());
             }
         }
-        return false;
     }
 
 
-    private boolean isHorizontalObstructed(ChessSquare[][] squareMatrix, ChessSquare destination, int initColumn, int destColumn) {
+    private void setHorizontalControl(ChessSquare[][] squareMatrix, int initColumn, int destColumn) {
         int distance = destColumn - initColumn;
         int asbDistance = Math.abs(distance);
         boolean isMovingRight = distance > 0;
-
+        ChessSquare currSquare;
 
         for (int currColumn = 1; currColumn <= asbDistance; currColumn++) {
             if (isMovingRight) {
-                ChessSquare currSquare = squareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn];
-                if (currSquare.getChessPiece() != null) {
-                    if (!isSameColor(currSquare.getChessPiece().getColor())) { //if found piece is opp. color then it can be captured
-                        currSquare.setIsControlledBy(this.getColor());
-                        if (currColumn < asbDistance) {
-                            return true;
-                        }
-                    }
-                    else {
-                        currSquare.setIsControlledBy(this.getColor());
-                        return true;
-                    }
-                }
-                else {
-                    currSquare.setIsControlledBy(this.getColor());
-                }
-                squareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn] = currSquare;
+                currSquare = squareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn];
             }
             else {
-                ChessSquare currSquare = squareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn];
-                if (currSquare.getChessPiece() != null) {
-                    if (!isSameColor(currSquare.getChessPiece().getColor())) { //if found piece is opp. color then it can be captured
-                        currSquare.setIsControlledBy(this.getColor());
-                        if (currColumn < asbDistance) {
-                            return true;
-                        }
-                    }
-                    else {
-                        currSquare.setIsControlledBy(this.getColor());
-                        return true;
-                    }
+                currSquare = squareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn];
+            }
+
+            currSquare.setIsControlledBy(this.getColor());
+
+            if (currSquare.getChessPiece() != null) {
+                if (isMovingRight) {
+                    squareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn] = currSquare;
+                    controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn] = currSquare;
+                    //controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn].setIsControlledBy("");
+                    //controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn].setIsControlledBy(this.getColor());
+
                 }
                 else {
-                    currSquare.setIsControlledBy(this.getColor());
+                    squareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn] = currSquare;
+                    controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn] = currSquare;
+                    //controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn].setIsControlledBy("");
+                    //controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn].setIsControlledBy(this.getColor());
                 }
+                return;
+            }
+
+            if (isMovingRight) {
+                squareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn] = currSquare;
+                controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn] = currSquare;
+                //controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn].setIsControlledBy("");
+                //controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn].setIsControlledBy(this.getColor());
+            }
+            else {
                 squareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn] = currSquare;
+                controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn] = currSquare;
+                //controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn].setIsControlledBy("");
+                //controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn].setIsControlledBy(this.getColor());
+
             }
         }
-        return false;
     }
 }
