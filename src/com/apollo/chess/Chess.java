@@ -139,7 +139,7 @@ public class Chess {
                     int destColumn = destinationLocation.getColumn();
                     int distance = destColumn - currColumn;
 
-                    ++moveNum;
+                    moveNum++;
                     player1Events.incMoveNumber();
                     player2Events.incMoveNumber();
 
@@ -235,6 +235,7 @@ public class Chess {
     }
 
     private static void castleKing(ChessSquare prevLocation, int distance) {
+        player1.sendMessage("CASTLING");
         if (prevLocation.getChessPiece().getColor().equalsIgnoreCase("white")) {
             if (distance < 0) { //left castle
                 currCastleNotation = "O-O-O";
