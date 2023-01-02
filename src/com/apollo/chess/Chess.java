@@ -139,6 +139,10 @@ public class Chess {
                     int destColumn = destinationLocation.getColumn();
                     int distance = destColumn - currColumn;
 
+                    ++moveNum;
+                    player1Events.incMoveNumber();
+                    player2Events.incMoveNumber();
+
                     //Move the rook to castle
                     if (prevLocation.getChessPiece().isKing && Math.abs(distance) == 2)
                         castleKing(prevLocation, distance);
@@ -157,10 +161,6 @@ public class Chess {
                     ChessPiece.resetBoardControlledSquares(squareMatrix);
                     ChessPiece.updateAllControlledSquares(squareMatrix);
                     determineGameEnd();
-
-                    moveNum++;
-                    player1Events.incMoveNumber();
-                    player2Events.incMoveNumber();
 
                      /*System.out.println("PIECE ON BOARD");
                      destinationLocation.getChessPiece().printControlledSquares();
@@ -235,7 +235,6 @@ public class Chess {
     }
 
     private static void castleKing(ChessSquare prevLocation, int distance) {
-        player1.sendMessage("CASTLING");
         if (prevLocation.getChessPiece().getColor().equalsIgnoreCase("white")) {
             if (distance < 0) { //left castle
                 currCastleNotation = "O-O-O";

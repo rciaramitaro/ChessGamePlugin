@@ -2,7 +2,7 @@ name: Chess
 version: 1.0.0
 author: Apollo
 main: com.apollo.chess.ChessMain
-api-version: 1.18
+api-version: 1.17
 commands:
   startChess:
     description: This commands starts chess

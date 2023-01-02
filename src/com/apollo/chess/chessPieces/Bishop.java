@@ -45,7 +45,7 @@ public class Bishop extends ChessPiece {
             if (isMovingDown && isMovingRight) {
                 ChessSquare currSquare = squareMatrix[initialRow+currDistance][initialColumn+currDistance];
                 if (currSquare.getChessPiece() != null) {
-                    if (!isSameColor(currSquare.getChessPiece().getColor())) { //if found piece if opp. color then it can be captured
+                    if (!isSameColor(currSquare.getChessPiece().getColor())) { //if found piece is opp. color then it can be captured
                         currSquare.setIsControlledBy(this.getColor());
                         if (currDistance < absDistance) {
                             return;
@@ -70,7 +70,7 @@ public class Bishop extends ChessPiece {
                 ChessSquare currSquare = squareMatrix[initialRow+currDistance][initialColumn-currDistance];
 
                 if (currSquare.getChessPiece() != null) {
-                    if (!isSameColor(currSquare.getChessPiece().getColor())) { //if found piece if opp. color then it can be captured
+                    if (!isSameColor(currSquare.getChessPiece().getColor())) { //if found piece is opp. color then it can be captured
                         currSquare.setIsControlledBy(this.getColor());
                         if (currDistance < absDistance) {
                             return;
@@ -95,7 +95,7 @@ public class Bishop extends ChessPiece {
                 ChessSquare currSquare = squareMatrix[initialRow - currDistance][initialColumn + currDistance];
 
                 if (currSquare.getChessPiece() != null) {
-                    if (!isSameColor(currSquare.getChessPiece().getColor())) { //if found piece if opp. color then it can be captured
+                    if (!isSameColor(currSquare.getChessPiece().getColor())) { //if found piece is opp. color then it can be captured
                         currSquare.setIsControlledBy(this.getColor());
                         if (currDistance < absDistance) {
                             return;
@@ -118,7 +118,7 @@ public class Bishop extends ChessPiece {
             else {
                 ChessSquare currSquare = squareMatrix[initialRow-currDistance][initialColumn-currDistance];
                 if (currSquare.getChessPiece() != null) {
-                    if (!isSameColor(currSquare.getChessPiece().getColor())) { //if found piece if opp. color then it can be captured
+                    if (!isSameColor(currSquare.getChessPiece().getColor())) { //if found piece is opp. color then it can be captured
                         currSquare.setIsControlledBy(this.getColor());
                         if (currDistance < absDistance) {
                             return;
@@ -139,6 +139,5 @@ public class Bishop extends ChessPiece {
 
             }
         }
-        return;
     }
 }

@@ -6,8 +6,9 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="78eef361-0d20-46fe-87a2-91924cb80cee" name="Changes" comment="Separated move piece command to select square&#10;Added castling &#10;Fixed determination of controlled square for all pieces">
-      <change afterPath="$PROJECT_DIR$/src/com/apollo/chess/events/PlayerEvents.java" afterDir="false" />
+    <list default="true" id="78eef361-0d20-46fe-87a2-91924cb80cee" name="Changes" comment="Full Chess functionality with selected squares being controlled by WASD keys. &#10;&#10;Selecting a piece is LEFT_CLICK.&#10;Moving to a square is RIGHT_CLICK.&#10;&#10;Known bugs and or improvements:&#10;Player must always have an item in their hand to acknowledge right clicks&#10;Players can get teleported to chess board without consent&#10;Players dont get teleported back to original position upon end of game.&#10;The plugin can only be used in the world it is developed in.&#10;Previous selected squares is slightly incorrect">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/Chess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/Chess.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/ChessMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/ChessMain.java" afterDir="false" />
@@ -15,16 +16,18 @@
       <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/ChessSquare.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/ChessSquare.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Bishop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Bishop.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/King.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/King.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Knight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Knight.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Pawn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Pawn.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Queen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Queen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Rook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Rook.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/commands/ChessCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/commands/ChessCommands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/events/PlayerEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/events/PlayerEvents.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -56,13 +59,15 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "C:/Users/REIS/Desktop/Spigot Minecraft Server/Tutorial Plugin/Tutorial/src/com/apollo/tutorial/Tutorial.java",
+    "last_opened_file_path": "C:/Users/REIS/Desktop/Spigot Minecraft Server/chess-misc/JavaStockfish/.project",
     "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2"
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -94,7 +99,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657005108842</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Full Chess functionality with selected squares being controlled by WASD keys. &#10;&#10;Selecting a piece is LEFT_CLICK.&#10;Moving to a square is RIGHT_CLICK.&#10;&#10;Known bugs and or improvements:&#10;Player must always have an item in their hand to acknowledge right clicks&#10;Players can get teleported to chess board without consent&#10;Players dont get teleported back to original position upon end of game.&#10;The plugin can only be used in the world it is developed in.&#10;Previous selected squares is slightly incorrect">
+      <created>1658088158361</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1658088158362</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -111,6 +123,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial Commit" />
     <MESSAGE value="Separated move piece command to select square&#10;Added castling &#10;Fixed determination of controlled square for all pieces" />
-    <option name="LAST_COMMIT_MESSAGE" value="Separated move piece command to select square&#10;Added castling &#10;Fixed determination of controlled square for all pieces" />
+    <MESSAGE value="Full Chess functionality with selected squares being controlled by WASD keys. &#10;&#10;Selecting a piece is LEFT_CLICK.&#10;Moving to a square is RIGHT_CLICK.&#10;&#10;Known bugs and or improvements:&#10;Player must always have an item in their hand to acknowledge right clicks&#10;Players can get teleported to chess board without consent&#10;Players dont get teleported back to original position upon end of game.&#10;The plugin can only be used in the world it is developed in.&#10;Previous selected squares is slightly incorrect" />
+    <option name="LAST_COMMIT_MESSAGE" value="Full Chess functionality with selected squares being controlled by WASD keys. &#10;&#10;Selecting a piece is LEFT_CLICK.&#10;Moving to a square is RIGHT_CLICK.&#10;&#10;Known bugs and or improvements:&#10;Player must always have an item in their hand to acknowledge right clicks&#10;Players can get teleported to chess board without consent&#10;Players dont get teleported back to original position upon end of game.&#10;The plugin can only be used in the world it is developed in.&#10;Previous selected squares is slightly incorrect" />
   </component>
 </project>

@@ -2,9 +2,6 @@ package com.apollo.chess;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
-
-import static com.apollo.chess.Chess.*;
 
 public class ChessPiece {
 
@@ -13,7 +10,6 @@ public class ChessPiece {
     public boolean isFirstMove = true;
     public boolean isKing = false;
     public boolean isPawn = false;
-    public boolean isAttacking;
     private final String name;
     private final String color;
     private final Location referenceLocation;
@@ -53,21 +49,6 @@ public class ChessPiece {
     public boolean isSameColor (String color) {
         return this.getColor().equals(color);
     }
-
-    /*public void keepKingSafe(ChessSquare[][] squareMatrix, ChessSquare[][] availableSquareMatrix) {
-        for (int row=0; row < 8; row++) {
-            for (int column = 0; column < 8; column++) {
-                ChessSquare currAvailableSquare = availableSquareMatrix[row][column];
-                ChessSquare currSquare = squareMatrix[row][column];
-                ChessSquare currentLocation = this.getCurrentLocation();
-
-
-                if (currAvailableSquare != null) {
-
-                }
-            }
-        }
-    }*/
 
     public static boolean determineChecks(ChessSquare[][] squareMatrix, String color) {
         for (int row=0; row < 8; row++) {
@@ -147,8 +128,6 @@ public class ChessPiece {
                             resetBoardControlledSquares(squareMatrix);
                             currentLocation.getChessPiece().setControlledSquares(squareMatrix);
                             updateAllControlledSquares(squareMatrix);
-                            /*printBoardPieces();
-                            printBoardControlledSquares();*/
 
                             if (determineChecks(squareMatrix, currentLocation.getChessPiece().getColor())) {
                                 availableSquareMatrix[row][column] = null;
@@ -176,8 +155,7 @@ public class ChessPiece {
                         resetBoardControlledSquares(squareMatrix);
                         currentLocation.getChessPiece().setControlledSquares(squareMatrix);
                         updateAllControlledSquares(squareMatrix);
-                        /*printBoardPieces();
-                        printBoardControlledSquares();*/
+
                         if (determineChecks(squareMatrix, currentLocation.getChessPiece().getColor())) {
                             availableSquareMatrix[row][column] = null;
                             currentLocation.setSquareColor(currentLocation.getColor());

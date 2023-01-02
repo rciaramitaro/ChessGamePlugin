@@ -12,7 +12,6 @@ public class ChessSquare {
     public boolean getIsHighlighted() {
         return isHighlighted;
     }
-    private final int SQUARE_SIZE=10;
     private boolean isBeingControlledByBlack = false;
     private boolean isBeingControlledByWhite = false;
 
@@ -177,10 +176,6 @@ public class ChessSquare {
             setSquareColor(this.getColor());
     }
 
-    public boolean getIsSelected() {
-        return isSelected;
-    }
-
     public void setSquareColor(String color) {
         Material material = null;
 
@@ -216,6 +211,7 @@ public class ChessSquare {
         int xInitial = (int) initialLocation.getX();
         int zInitial = (int) initialLocation.getZ();
 
+        int SQUARE_SIZE = 10;
         for (int z = 0; z <= SQUARE_SIZE - 1; z++) {
             initialLocation.setZ(zInitial + z);
             for (int x = 0; x <= SQUARE_SIZE - 1; x++) {

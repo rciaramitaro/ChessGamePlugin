@@ -74,9 +74,6 @@ public class Pawn extends ChessPiece {
                             getCurrentLocation().getChessPiece().resetControlledSquares();
                             resetBoardControlledSquares(squareMatrix);
                             getCurrentLocation().getChessPiece().setControlledSquares(squareMatrix);
-                            /*updateAllControlledSquares(squareMatrix);
-                            printBoardPieces();
-                            printBoardControlledSquares();*/
 
                             if (determineChecks(squareMatrix, getCurrentLocation().getChessPiece().getColor())) {
                                 availableSquareMatrix[row][column] = null;
@@ -110,8 +107,7 @@ public class Pawn extends ChessPiece {
                             resetBoardControlledSquares(squareMatrix);
                             getCurrentLocation().getChessPiece().setControlledSquares(squareMatrix);
                             updateAllControlledSquares(squareMatrix);
-                        /*printBoardPieces();
-                        printBoardControlledSquares();*/
+
                             if (determineChecks(squareMatrix, getCurrentLocation().getChessPiece().getColor())) {
                                 availableSquareMatrix[row][column] = null;
                                 getCurrentLocation().setSquareColor(getCurrentLocation().getColor());
@@ -135,8 +131,7 @@ public class Pawn extends ChessPiece {
                         resetBoardControlledSquares(squareMatrix);
                         getCurrentLocation().getChessPiece().setControlledSquares(squareMatrix);
                         updateAllControlledSquares(squareMatrix);
-                        /*printBoardPieces();
-                        printBoardControlledSquares();*/
+
                         if (determineChecks(squareMatrix, getCurrentLocation().getChessPiece().getColor())) {
                             availableSquareMatrix[row][column] = null;
                             getCurrentLocation().setSquareColor(getCurrentLocation().getColor());

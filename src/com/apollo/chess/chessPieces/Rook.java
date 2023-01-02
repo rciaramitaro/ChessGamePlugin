@@ -48,14 +48,10 @@ public class Rook extends ChessPiece {
                 if (isMovingDown) {
                     squareMatrix[initRow + currRow][this.getCurrentLocation().getColumn()] = currSquare;
                     controlSquareMatrix[initRow + currRow][this.getCurrentLocation().getColumn()] = currSquare;
-                    //controlSquareMatrix[initRow + currRow][this.getCurrentLocation().getColumn()].setIsControlledBy("");
-                    //controlSquareMatrix[initRow + currRow][this.getCurrentLocation().getColumn()].setIsControlledBy(this.getColor());
                 }
                 else {
                     squareMatrix[initRow - currRow][this.getCurrentLocation().getColumn()] = currSquare;
                     controlSquareMatrix[initRow - currRow][this.getCurrentLocation().getColumn()] = currSquare;
-                    //controlSquareMatrix[initRow - currRow][this.getCurrentLocation().getColumn()].setIsControlledBy("");
-                    //controlSquareMatrix[initRow - currRow][this.getCurrentLocation().getColumn()].setIsControlledBy(this.getColor());
                 }
                 return;
             }
@@ -63,14 +59,10 @@ public class Rook extends ChessPiece {
             if (isMovingDown) {
                 squareMatrix[initRow + currRow][this.getCurrentLocation().getColumn()] = currSquare;
                 controlSquareMatrix[initRow + currRow][this.getCurrentLocation().getColumn()] = currSquare;
-                //controlSquareMatrix[initRow + currRow][this.getCurrentLocation().getColumn()].setIsControlledBy("");
-                //controlSquareMatrix[initRow + currRow][this.getCurrentLocation().getColumn()].setIsControlledBy(this.getColor());
             }
             else {
                 squareMatrix[initRow - currRow][this.getCurrentLocation().getColumn()] = currSquare;
                 controlSquareMatrix[initRow - currRow][this.getCurrentLocation().getColumn()] = currSquare;
-                //controlSquareMatrix[initRow - currRow][this.getCurrentLocation().getColumn()].setIsControlledBy("");
-                //controlSquareMatrix[initRow - currRow][this.getCurrentLocation().getColumn()].setIsControlledBy(this.getColor());
             }
         }
     }
@@ -96,15 +88,11 @@ public class Rook extends ChessPiece {
                 if (isMovingRight) {
                     squareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn] = currSquare;
                     controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn] = currSquare;
-                    //controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn].setIsControlledBy("");
-                    //controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn].setIsControlledBy(this.getColor());
 
                 }
                 else {
                     squareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn] = currSquare;
                     controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn] = currSquare;
-                    //controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn].setIsControlledBy("");
-                    //controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn].setIsControlledBy(this.getColor());
                 }
                 return;
             }
@@ -112,15 +100,10 @@ public class Rook extends ChessPiece {
             if (isMovingRight) {
                 squareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn] = currSquare;
                 controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn] = currSquare;
-                //controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn].setIsControlledBy("");
-                //controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn+currColumn].setIsControlledBy(this.getColor());
             }
             else {
                 squareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn] = currSquare;
                 controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn] = currSquare;
-                //controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn].setIsControlledBy("");
-                //controlSquareMatrix[this.getCurrentLocation().getRow()][initColumn-currColumn].setIsControlledBy(this.getColor());
-
             }
         }
     }

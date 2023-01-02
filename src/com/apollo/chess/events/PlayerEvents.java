@@ -37,6 +37,7 @@ public class PlayerEvents implements Listener {
             Location currLocation = event.getTo();
 
             if (event.getPlayer() == currentPlayer) {
+                assert currLocation != null;
                 if (!didPlayerOnlyLook(prevLocation, currLocation)) {
                     if ((moveNumber % 2 == 0 && playerNum == 2) || (moveNumber % 2 != 0 && playerNum == 1))
                         determineMoveDirection(prevLocation, currLocation);
@@ -69,21 +70,19 @@ public class PlayerEvents implements Listener {
     private void determineMoveDirection(Location prevLocation, Location currLocation) {
         selectedSquare.setUnSelected();
 
-            if (playerMovedForward(prevLocation, currLocation)) {
-                if (selectedSquare.getRow() > 0)
-                    selectedSquare = squareMatrix[selectedSquare.getRow() - 1][selectedSquare.getColumn()];
-            } else if (playerMovedBackwards(prevLocation, currLocation)) {
-                if (selectedSquare.getRow() < 7)
-                    selectedSquare = squareMatrix[selectedSquare.getRow() + 1][selectedSquare.getColumn()];
-            } else if (playerMovedLeft(prevLocation, currLocation)) {
-                if (selectedSquare.getColumn() > 0)
-                    selectedSquare = squareMatrix[selectedSquare.getRow()][selectedSquare.getColumn() - 1];
-            } else if (playerMovedRight(prevLocation, currLocation)) {
-                if (selectedSquare.getColumn() < 7)
-                    selectedSquare = squareMatrix[selectedSquare.getRow()][selectedSquare.getColumn() + 1];
-            } else if (playerMovedUp(prevLocation, currLocation)) {
-            } else if (playerMovedDown(prevLocation, currLocation)) {
-            }
+        if (playerMovedForward(prevLocation, currLocation)) {
+            if (selectedSquare.getRow() > 0)
+                selectedSquare = squareMatrix[selectedSquare.getRow() - 1][selectedSquare.getColumn()];
+        } else if (playerMovedBackwards(prevLocation, currLocation)) {
+            if (selectedSquare.getRow() < 7)
+                selectedSquare = squareMatrix[selectedSquare.getRow() + 1][selectedSquare.getColumn()];
+        } else if (playerMovedLeft(prevLocation, currLocation)) {
+            if (selectedSquare.getColumn() > 0)
+                selectedSquare = squareMatrix[selectedSquare.getRow()][selectedSquare.getColumn() - 1];
+        } else if (playerMovedRight(prevLocation, currLocation)) {
+            if (selectedSquare.getColumn() < 7)
+                selectedSquare = squareMatrix[selectedSquare.getRow()][selectedSquare.getColumn() + 1];
+        }
         selectSquare(selectedSquare);
     }
 
@@ -105,13 +104,5 @@ public class PlayerEvents implements Listener {
 
     private static boolean playerMovedRight(Location prev, Location curr) {
         return (curr.getZ() + MOVE_TOLERANCE) < prev.getZ();
-    }
-
-    private static boolean playerMovedUp(Location prev, Location curr) {
-        return (curr.getY() - MOVE_TOLERANCE) > prev.getY();
-    }
-
-    private static boolean playerMovedDown(Location prev, Location curr) {
-        return (curr.getY() + MOVE_TOLERANCE) < prev.getY();
     }
 }
