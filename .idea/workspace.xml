@@ -9,17 +9,7 @@
     <list default="true" id="78eef361-0d20-46fe-87a2-91924cb80cee" name="Changes" comment="Full Chess functionality with selected squares being controlled by WASD keys. &#10;&#10;Selecting a piece is LEFT_CLICK.&#10;Moving to a square is RIGHT_CLICK.&#10;&#10;Known bugs and or improvements:&#10;Player must always have an item in their hand to acknowledge right clicks&#10;Players can get teleported to chess board without consent&#10;Players dont get teleported back to original position upon end of game.&#10;The plugin can only be used in the world it is developed in.&#10;Previous selected squares is slightly incorrect">
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/Chess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/Chess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/ChessMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/ChessMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/ChessPiece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/ChessPiece.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/ChessSquare.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/ChessSquare.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Bishop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Bishop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/King.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/King.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Pawn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Pawn.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Rook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/chessPieces/Rook.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/commands/ChessCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/commands/ChessCommands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/apollo/chess/events/PlayerEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/apollo/chess/events/PlayerEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chess.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Chess.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,8 +53,8 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "C:/Users/REIS/Desktop/Spigot Minecraft Server/chess-misc/JavaStockfish/.project",
-    "project.structure.last.edited": "Artifacts",
+    "last_opened_file_path": "/home/reis/Desktop/Spigot Minecraft Server/Dependencies/spigot-api-1.19.jar",
+    "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings"
