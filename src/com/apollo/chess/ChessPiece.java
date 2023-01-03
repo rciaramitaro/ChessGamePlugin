@@ -10,17 +10,41 @@ public class ChessPiece {
     public boolean isFirstMove = true;
     public boolean isKing = false;
     public boolean isPawn = false;
+
+    private String pieceLetter;
     private final String name;
     private final String color;
     private final Location referenceLocation;
     private ChessSquare currentLocation;
+    private ChessSquare prevSquare, currSquare;
 
     public ChessPiece(World world, int x, int y, int z, String name, String color) {
         referenceLocation = new Location(world, x, y, z);
         this.name=name;
         this.color=color;
+        this.pieceLetter=determinePieceLetter();
     }
 
+    private String determinePieceLetter() {
+
+        String pieceLetter = Character.toString(name.charAt(0));
+
+        if (pieceLetter.equals("K")) {
+            if (name.charAt(1) == 'i')
+                pieceLetter = "K";
+            else
+                pieceLetter = "N";
+        }
+
+        if (color == "white")
+            pieceLetter = pieceLetter.toUpperCase();
+        else
+            pieceLetter = pieceLetter.toLowerCase();
+
+        return pieceLetter;
+    }
+
+    public String getPieceLetter() { return pieceLetter; }
 
     public String getColor() {
         return color;
@@ -33,6 +57,8 @@ public class ChessPiece {
     public ChessSquare getCurrentLocation() {
         return currentLocation;
     }
+
+    public ChessSquare getPrevLocation() { return prevSquare; }
 
     public Location getReferenceLocation() {
         return this.referenceLocation;
@@ -223,5 +249,10 @@ public class ChessPiece {
     }
 
     public void setIsInCheck(boolean b) {
+    }
+
+    public void setRecentSquares(ChessSquare prev, ChessSquare dest) {
+        this.prevSquare = prev;
+        this.currSquare = dest;
     }
 }

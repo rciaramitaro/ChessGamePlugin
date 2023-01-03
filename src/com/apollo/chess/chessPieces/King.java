@@ -49,7 +49,7 @@ public class King extends ChessPiece {
         }
     }
 
-    private boolean canCastleRight(ChessSquare[][] squareMatrix) {
+    public boolean canCastleRight(ChessSquare[][] squareMatrix) {
         if (this.getCurrentLocation().getRow() == 7) { //White king is on bottom row
             if (squareMatrix[7][7].getChessPiece() != null) { //Rook exists in bottom right
                 if (squareMatrix[7][6].getChessPiece() == null && squareMatrix[7][5].getChessPiece() == null) { //No obstructions
@@ -69,7 +69,7 @@ public class King extends ChessPiece {
         return false;
     }
 
-    private boolean canCastleLeft(ChessSquare[][] squareMatrix) {
+    public boolean canCastleLeft(ChessSquare[][] squareMatrix) {
 
             if (this.getCurrentLocation().getRow() == 7) { //White king is on bottom row
                 if (squareMatrix[7][0].getChessPiece() != null) {//Piece exists in bottom left

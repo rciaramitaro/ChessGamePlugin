@@ -5,6 +5,8 @@ import com.apollo.chess.ChessSquare;
 import org.bukkit.World;
 
 public class Pawn extends ChessPiece {
+    public boolean isMovedTwoSpaces = false;
+    private ChessSquare skippedSpace;
     public Pawn(World world, int x, int y, int z, int num, String color) {
         super(world, x, y, z, "Pawn"+num, color);
         isPawn = true;
@@ -17,6 +19,8 @@ public class Pawn extends ChessPiece {
         int currentRow = this.getCurrentLocation().getRow();
         int destinationColumn = destination.getColumn();
         int destinationRow = destination.getRow();
+        isMovedTwoSpaces = false;
+        skippedSpace = null;
 
         //move forward open spaces on same column
         if (currentColumn == destinationColumn) {
@@ -28,7 +32,9 @@ public class Pawn extends ChessPiece {
                     return true;
                 }
                 //white to move forward by 2
-                else return destinationRow - currentRow == -2 && isFirstMove;
+                else {
+                    return destinationRow - currentRow == -2 && isFirstMove;
+                }
             }
             else if (getColor().equals("black") && !isDestinationObstructed(squareMatrix, destination)) {
                 //black to move forward by 1
@@ -37,7 +43,9 @@ public class Pawn extends ChessPiece {
                     return true;
                 }
                 //black to move forward by 2
-                else return destinationRow - currentRow == 2 && isFirstMove;
+                else {
+                    return destinationRow - currentRow == 2 && isFirstMove;
+                }
             }
         }
         //pawn is attacking diagonally forward
@@ -53,6 +61,29 @@ public class Pawn extends ChessPiece {
         }
         //anything else is invalid
         return false;
+    }
+
+    public String getSkippedSpace(ChessSquare[][] squareMatrix) {
+        int prevRow = this.getPrevLocation().getRow();
+        int currRow = this.getCurrentLocation().getRow();
+
+
+
+        if (getColor().equals("white")) {
+            if (currRow - prevRow != -2)
+                return "-";
+
+            return squareMatrix[prevRow-1][this.getCurrentLocation().getColumn()].getName();
+        }
+
+        if (getColor().equals("black")) {
+            if (currRow - prevRow != 2)
+                return "-";
+
+            return squareMatrix[prevRow+1][this.getCurrentLocation().getColumn()].getName();
+        }
+
+        return "-";
     }
 
     public int getAvailableSquares(ChessSquare[][] squareMatrix) {

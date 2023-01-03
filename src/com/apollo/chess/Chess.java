@@ -2,6 +2,7 @@ package com.apollo.chess;
 
 import com.apollo.chess.chessPieces.*;
 import com.apollo.chess.events.PlayerEvents;
+import net.andreinc.neatchess.client.UCI;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,6 +20,11 @@ public class Chess {
     private static final int BORDER_SIZE = 2;
     private static Plugin plugin = null;
     private static String currCastleNotation;
+    private static King whiteKing, blackKing;
+
+    private static Rook whiteRookKing, blackRookKing, whiteRookQueen, blackRookQueen;
+
+    private static ChessPiece lastMovedPiece;
 
     private static ChessSquare[][] squareMatrix = new ChessSquare[8][8];
     private static ChessSquare selectedSquare;
@@ -26,6 +32,8 @@ public class Chess {
     private static Location player1Location, player2Location;
     private static PlayerEvents player1Events, player2Events;
     private static int moveNum = 1;
+
+    private static UCI client;
 
     public static void init(Plugin plugin, Player player1, String player2) {
         Chess.plugin = plugin;
@@ -38,11 +46,15 @@ public class Chess {
             }
         }
 
+        client = new UCI();
+        client.startStockfish();
+        client.setOption("MultiPV", "10");
+
+
         Chess.player1Location = new Location(Chess.player1.getWorld(), -1146, 130, -291, 90, 37);
         Chess.player2Location = new Location(Chess.player2.getWorld(), -1239, 130, -291, -90, 37);
 
         if (Chess.player2 != null) {
-
             startGame();
         }
         else
@@ -59,6 +71,11 @@ public class Chess {
 
         ChessPiece.updateAllControlledSquares(squareMatrix);
 
+        whiteRookKing = (Rook) squareMatrix[7][7].getChessPiece();
+        whiteRookQueen = (Rook) squareMatrix[7][0].getChessPiece();
+        blackRookKing = (Rook) squareMatrix[0][7].getChessPiece();
+        blackRookQueen = (Rook) squareMatrix[0][0].getChessPiece();
+
         selectSquare(squareMatrix[7][0]);
         teleportToPlayersToPlayingPositions();
         player1Events = new PlayerEvents(squareMatrix, player1, 1);
@@ -71,6 +88,7 @@ public class Chess {
         /*
         TODO: Put chess in its own world so anyone can use plugin without disrupting overworld
         */
+        determineBestMove();
     }
 
     private static void teleportToPlayersToPlayingPositions() {
@@ -95,12 +113,12 @@ public class Chess {
                 selectedSquare.getChessPiece().getAvailableSquares(squareMatrix);
                 selectedSquare.getChessPiece().showAvailableSquares();
 
-                System.out.println("AVAILABLE SQUARES FOR PIECE");
+                /*System.out.println("AVAILABLE SQUARES FOR PIECE");
                 selectedSquare.getChessPiece().printAvailableSquares();
                 System.out.println("SQUARES CONTROLLED BY PIECE");
                 selectedSquare.getChessPiece().printControlledSquares();
                 System.out.println("CONTROLLED SQUARES BY ALL PIECES");
-                printBoardControlledSquares();
+                printBoardControlledSquares();*/
             }
             else
                 player.sendMessage("You may only select your own color pieces");
@@ -151,9 +169,14 @@ public class Chess {
                     prevLocation.getChessPiece().setMoved();
                     prevLocation.movePiece(destinationLocation);
 
+                    lastMovedPiece = destinationLocation.getChessPiece();
+                    lastMovedPiece.setRecentSquares(prevLocation, destinationLocation);
+
                     //Pawn promotion
                     if (destinationLocation.getChessPiece().isPawn)
                         determinePawnPromotion(destinationLocation);
+
+                    determineBestMove();
 
                     resetAllHighlightedSquares();
                     showRecentSquares(prevLocation, destinationLocation);
@@ -172,6 +195,116 @@ public class Chess {
                 }
             }
         }
+    }
+
+    private static void determineBestMove() {
+
+        String posFEN = getFENPosition();
+        System.out.println(posFEN);
+        client.positionFen(posFEN).getResultOrThrow();
+        //client.positionFen("r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3").getResultOrThrow();
+        var analysis = client.analysis(18).getResultOrThrow();
+        var moves = analysis.getAllMoves();
+
+// Output
+        moves.forEach((idx, move) -> {
+            System.out.println(move);
+        });
+
+
+    }
+
+    private static String getFENPosition() {
+
+        String piecePlacement = getPiecePlacement();
+        String activeColor =  activeColor();
+        String castleAvailability = getCastleAvailability();
+        String enPassant = getEnPassantSquares();
+        String halfMoves = "0";
+        String fullMoves = getFullMoves();
+
+        return piecePlacement + " " +
+                    activeColor + " " +
+                        castleAvailability + " " +
+                            enPassant + " " +
+                                halfMoves + " " +
+                                    fullMoves;
+
+    }
+
+    private static String getFullMoves() {
+        int fullMove = (moveNum+1)/2;
+        return String.valueOf(fullMove);
+    }
+
+    private static String getHalfMoves() {
+        return String.valueOf(moveNum-1);
+    }
+
+    private static String getEnPassantSquares() {
+        if (lastMovedPiece == null || !lastMovedPiece.isPawn)
+            return "-";
+
+        Pawn pawn = (Pawn) lastMovedPiece;
+
+        return pawn.getSkippedSpace(squareMatrix);
+    }
+
+    private static String getCastleAvailability() {
+        String castleAvailable = "";
+
+        if (whiteKing.isFirstMove && whiteRookKing.isFirstMove)
+            castleAvailable += "K";
+
+        if (whiteKing.isFirstMove && whiteRookQueen.isFirstMove)
+            castleAvailable += "Q";
+
+        if (blackKing.isFirstMove && blackRookKing.isFirstMove)
+            castleAvailable += "k";
+
+        if (blackKing.isFirstMove && blackRookQueen.isFirstMove)
+            castleAvailable += "q";
+
+        return castleAvailable;
+    }
+
+    private static String getPiecePlacement() {
+        int emptySquareCount = 0;
+        String rank = "";
+        King king;
+
+        for (int row=0; row < 8; row++) {
+            for (int column = 0; column < 8; column++) {
+                ChessPiece currPiece = squareMatrix[row][column].getChessPiece();
+                if (currPiece == null)
+                    emptySquareCount++;
+                else {
+                    if (emptySquareCount > 0)
+                        rank += emptySquareCount;
+                    emptySquareCount = 0;
+                    rank += currPiece.getPieceLetter();
+
+                    if (currPiece.getPieceLetter().equals("K")) {
+                        whiteKing = (King) currPiece;
+                    }
+                    if (currPiece.getPieceLetter().equals("k")) {
+                        blackKing = (King) currPiece;
+                    }
+                }
+            }
+            if (emptySquareCount > 0)
+                rank += emptySquareCount;
+            emptySquareCount = 0;
+            rank += "/";
+        }
+        return rank;
+    }
+
+    private static String activeColor() {
+        if (moveNum%2 == 0)
+            return "b";
+
+        return "w";
     }
 
     private static void showRecentSquares(ChessSquare prev, ChessSquare curr) {
@@ -230,6 +363,8 @@ public class Chess {
     }
 
     private static void endGame() {
+        client.close();
+
         player1Events.endGame();
         player2Events.endGame();
     }
@@ -274,33 +409,22 @@ public class Chess {
     private static String getMoveNotation(ChessSquare prevLoc, ChessSquare destLoc) {
         ChessPiece takenPiece = destLoc.getChessPiece();
         String takes = "";
-        if (takenPiece != null)
-            takes = "x";
-        String movedPieceLetter = determinePieceLetter(prevLoc, takes=="x");
-        String destName = destLoc.getName();
 
+        String movedPieceLetter = prevLoc.getChessPiece().getPieceLetter();
+
+        if (movedPieceLetter.toLowerCase().contains("p")) {
+            if (takenPiece != null) {
+                movedPieceLetter = getColumnName(prevLoc.getColumn());
+                takes = "x";
+            } else {
+                movedPieceLetter = "";
+            }
+        }
 
         if (currCastleNotation == null)
-            return movedPieceLetter + takes + destName;
+            return movedPieceLetter + takes + destLoc.getName();
         else
             return currCastleNotation;
-    }
-
-    private static String determinePieceLetter(ChessSquare prevLoc, Boolean isTaking) {
-        char firstLetter = prevLoc.getChessPiece().getName().charAt(0);
-        if (firstLetter == 'P')
-            if (isTaking)
-                return getColumnName(prevLoc.getColumn());
-            else
-                return "";
-
-        if (firstLetter == 'K') {
-            if (prevLoc.getChessPiece().getName().charAt(1) == 'i')
-                return "K";
-            else
-                return "N";
-        }
-        return Character.toString(firstLetter);
     }
 
     public static void resetAllHighlightedSquares() {
